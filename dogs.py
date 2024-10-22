@@ -1,8 +1,25 @@
 from tkinter import *
-import  requests
+import requests
 from PIL import Image, ImageTk
 from io import BytesIO
+from tkinter import messagebox
 
+
+def show_image():
+    image_url = get_dog_image()
+    if image_url:
+        try:
+            response = requests.get(image_url, stream=True)
+            response.raise_for_status()
+            img_data = BytesIO(response.content)
+            img = Image.open(img_data)
+            img.thumbnail((300, 300))
+            img = ImageTk.PhotoImage(img)
+            label.config(image=img)
+            label.image = img
+
+        except requests.RequestException as e:
+                    messagebox.showerror("Ошибка", f"Не удалось загрузить изображение: {e}")
 
 window = Tk()
 window.title('Картинки с собачками')
