@@ -5,6 +5,17 @@ from io import BytesIO
 from tkinter import messagebox
 
 
+def get_dog_image():
+    try:
+        response = requests.get('https://dog.ceo/api/breeds/image/random')
+        response.raise_for_status()
+        data = response.json()
+        return data['message']
+    except Exception as e:
+        messagebox.showerror("Ошибка", f"Ошибка при запросе к API: {e}")
+        return None
+
+
 def show_image():
     image_url = get_dog_image()
     if image_url:
@@ -19,7 +30,7 @@ def show_image():
             label.image = img
 
         except requests.RequestException as e:
-                    messagebox.showerror("Ошибка", f"Не удалось загрузить изображение: {e}")
+            messagebox.showerror("Ошибка", f"Не удалось загрузить изображение: {e}")
 
 window = Tk()
 window.title('Картинки с собачками')
