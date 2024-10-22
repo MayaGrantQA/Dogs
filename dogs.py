@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import requests
 from PIL import Image, ImageTk
 from io import BytesIO
@@ -31,15 +32,31 @@ def show_image():
 
         except requests.RequestException as e:
             messagebox.showerror("Ошибка", f"Не удалось загрузить изображение: {e}")
+    # Останавливаем прогрессбар после загрузки картинки
+    progress.stop()
+
+
+def prog():
+    # Ставим прогрессбар в начальное положение
+    progress['value'] = 0
+    # Запускаем прогрессбар и увеличиваем значение от 0 до 100 за 3 секунды
+    progress.start(30)
+    window.after(3000, show_image)
 
 window = Tk()
 window.title('Картинки с собачками')
 window.geometry('360x420')
 
-label = Label()
+label = ttk.Label()
 label.pack(pady=10)
 
-button = Button(text='Загрузить изображение', command=show_image)
+button = ttk.Button(text='Загрузить изображение', command=prog)
 button.pack(pady=10)
+
+# Используем ttk.Progressbar для индикации загрузки
+progress = ttk.Progressbar(mode='determinate', length=300)
+progress.pack(padx=10, pady=10)
+
+
 
 window.mainloop()
